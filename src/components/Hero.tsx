@@ -1,5 +1,6 @@
 import React from 'react';
 import { Github, Linkedin, Mail, MapPin, Phone, ChevronDown } from 'lucide-react';
+import { TypeAnimation } from 'react-type-animation';
 
 const Hero: React.FC = () => {
   const scrollToAbout = () => {
@@ -19,7 +20,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-gray-900 dark:to-gray-800 pt-16">
+    <section id="hero" className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-primary-100 to-secondary-100 dark:from-gray-800 dark:to-gray-900 pt-16 animated-gradient">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in">
           {/* Profile Image */}
@@ -29,6 +30,7 @@ const Hero: React.FC = () => {
                 src="/assets/vipin.png"
                 alt="Vipin Dadhich"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
           </div>
@@ -36,14 +38,24 @@ const Hero: React.FC = () => {
           {/* Main Content */}
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             <span className="block">Vipin Dadhich</span>
-            <span className="block text-3xl md:text-4xl text-primary-600 dark:text-primary-400 mt-2">
-              Python Backend Developer
-            </span>
+            <TypeAnimation
+              sequence={[
+                'Python Backend Developer',
+                1000,
+                'Cloud Specialist',
+                1000,
+                'API Architect',
+                1000,
+              ]}
+              wrapper="span"
+              speed={50}
+              className="block text-3xl md:text-4xl text-primary-600 dark:text-primary-400 mt-2"
+              repeat={Infinity}
+            />
           </h1>
 
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Specialized in building and deploying scalable applications with expertise in EV charging solutions, 
-            REST APIs, and cloud deployments. Passionate about creating impactful backend systems.
+            Specialized in building and deploying scalable applications with expertise in REST APIs, and cloud deployments. Passionate about creating impactful backend systems that solve complex problems.
           </p>
 
           {/* Contact Info */}

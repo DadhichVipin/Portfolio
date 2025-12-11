@@ -1,5 +1,6 @@
 import React from 'react';
 import { Code, Database, Cloud, Server, GitBranch, Monitor } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Skills: React.FC = () => {
   const skillCategories = [
@@ -65,7 +66,7 @@ const Skills: React.FC = () => {
       skills: [
         { name: 'Git & GitHub', level: 90, description: 'Version control systems' },
         { name: 'Linux', level: 85, description: 'Server administration' },
-        { name: 'Windows', level: 80, description: 'Development environment' }
+        { name: 'Mac OS', level: 80, description: 'Development environment' }
       ]
     }
   ];
@@ -126,6 +127,19 @@ const Skills: React.FC = () => {
     }
   };
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    }),
+  };
+
   return (
     <section id="skills" className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -140,14 +154,19 @@ const Skills: React.FC = () => {
 
         {/* Skills Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          {skillCategories.map((category) => {
+          {skillCategories.map((category, index) => {
             const IconComponent = category.icon;
             const colors = getColorClasses(category.color);
             
             return (
-              <div
+              <motion.div
                 key={category.id}
-                className={`p-8 rounded-xl border ${colors.bg} ${colors.border} hover:shadow-lg transition-all duration-300 animate-slide-up`}
+                className={`p-8 rounded-xl border ${colors.bg} ${colors.border} hover:shadow-lg transition-all duration-300`}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                custom={index}
               >
                 <div className="flex items-center mb-6">
                   <div className={`p-3 rounded-lg ${colors.bg} border ${colors.border}`}>
@@ -170,10 +189,13 @@ const Skills: React.FC = () => {
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
-                        <div
-                          className={`h-2 rounded-full ${colors.progress} transition-all duration-1000 ease-out`}
-                          style={{ width: `${skill.level}%` }}
-                        ></div>
+                        <motion.div
+                          className={`h-2 rounded-full ${colors.progress}`}
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${skill.level}%` }}
+                          viewport={{ once: true, amount: 0.8 }}
+                          transition={{ duration: 1, ease: 'easeOut' }}
+                        />
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         {skill.description}
@@ -181,7 +203,7 @@ const Skills: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -193,10 +215,14 @@ const Skills: React.FC = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {specializations.map((spec, index) => (
-              <div
+              <motion.div
                 key={spec.title}
-                className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center animate-scale-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center"
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                custom={index}
               >
                 <div className="text-4xl mb-4">{spec.icon}</div>
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -205,7 +231,7 @@ const Skills: React.FC = () => {
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   {spec.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

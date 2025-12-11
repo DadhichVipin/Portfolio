@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, MapPin, Building } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Experience: React.FC = () => {
   const experiences = [
@@ -54,6 +55,19 @@ const Experience: React.FC = () => {
     }
   ];
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    }),
+  };
+
   return (
     <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,18 +86,23 @@ const Experience: React.FC = () => {
 
           <div className="space-y-12">
             {experiences.map((exp, index) => (
-              <div
+              <motion.div
                 key={exp.id}
                 className={`relative flex items-center ${
                   index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                 } flex-col md:items-start`}
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                custom={index}
               >
                 {/* Timeline dot */}
                 <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-900 border-4 border-primary-600 rounded-full z-10"></div>
 
                 {/* Content */}
                 <div className={`w-full md:w-5/12 ml-12 md:ml-0 ${index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
-                  <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow duration-300 animate-slide-up">
+                  <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
                     {/* Header */}
                     <div className="mb-4">
                       <div className="flex items-center mb-2">
@@ -146,7 +165,7 @@ const Experience: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

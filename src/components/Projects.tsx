@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ExternalLink, Github, Filter, Code, Database, Cloud } from 'lucide-react';
+import { ExternalLink, Github, Code, Database, Cloud } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
 
 const Projects: React.FC = () => {
@@ -13,11 +14,23 @@ const Projects: React.FC = () => {
     { id: 'backend', label: 'Backend Systems', icon: Cloud },
   ];
 
-  // Get first 6 projects
   const displayedProjects = projects.slice(0, 6);
   const filteredProjects = filter === 'all' 
     ? displayedProjects 
     : displayedProjects.filter(project => project.category === filter);
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    }),
+  };
 
   return (
     <section id="projects" className="py-20 bg-white dark:bg-gray-900">
@@ -55,10 +68,14 @@ const Projects: React.FC = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => (
-            <div
+            <motion.div
               key={project.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-scale-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              custom={index}
             >
               {/* Project Image */}
               <div className="relative h-48 overflow-hidden">
@@ -138,7 +155,7 @@ const Projects: React.FC = () => {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

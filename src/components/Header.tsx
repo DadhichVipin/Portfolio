@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Sun, Moon, Download } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
   darkMode: boolean;
@@ -10,22 +10,21 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
-  const navigate = useNavigate();
   const location = useLocation();
 
   const navItems = [
-    { href: '/#hero', label: 'Home' },
-    { href: '/#about', label: 'About' },
-    { href: '/#experience', label: 'Experience' },
-    { href: '/#projects', label: 'Projects' },
-    { href: '/#skills', label: 'Skills' },
-    { href: '/#contact', label: 'Contact' },
+    { href: '#hero', label: 'Home' },
+    { href: '#about', label: 'About' },
+    { href: '#experience', label: 'Experience' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#skills', label: 'Skills' },
+    { href: '#contact', label: 'Contact' },
   ];
 
   useEffect(() => {
     const handleScroll = () => {
       if (location.pathname !== '/') return;
-      
+
       const sections = ['hero', 'about', 'experience', 'projects', 'skills', 'contact'];
       const currentSection = sections.find(section => {
         const element = document.getElementById(section);
@@ -35,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
         }
         return false;
       });
-      
+
       if (currentSection) {
         setActiveSection(currentSection);
       }
@@ -45,37 +44,37 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
-  const handleNavigation = (href: string) => {
+  const handleMenuLinkClick = () => {
     setIsMenuOpen(false);
-    if (href.startsWith('/#')) {
-      navigate('/');
-      const element = document.getElementById(href.slice(2));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      navigate(href);
-    }
   };
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return location.pathname === '/' && activeSection === 'hero';
-    }
-    if (href.startsWith('/#')) {
-      return location.pathname === '/' && activeSection === href.slice(2);
-    }
-    return location.pathname === href;
+    return location.pathname === '/' && activeSection === href.slice(1);
   };
 
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume.pdf';
+    link.href = '/assets/Vipin_Dadhich_Resume.pdf';
     link.download = 'Vipin_Dadhich_Resume.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
+  const navLinks = navItems.map((item) => (
+    <a
+      key={item.href}
+      href={item.href}
+      onClick={handleMenuLinkClick}
+      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+        isActive(item.href)
+          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+          : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
+      }`}
+    >
+      {item.label}
+    </a>
+  ));
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 z-40 transition-all duration-300">
@@ -83,29 +82,17 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <button
-              onClick={() => handleNavigation('/')}
+            <Link
+              to="/"
               className="text-2xl font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
             >
               VD
-            </button>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => handleNavigation(item.href)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive(item.href)
-                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+            {navLinks}
           </div>
 
           {/* Desktop Actions */}
@@ -146,19 +133,9 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-              {navItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => handleNavigation(item.href)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left transition-colors ${
-                    isActive(item.href)
-                      ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+              <div className="flex flex-col items-start">
+                {navLinks}
+              </div>
               <button
                 onClick={downloadResume}
                 className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
